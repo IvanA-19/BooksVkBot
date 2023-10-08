@@ -10,6 +10,7 @@ from vk_api import VkUpload
 import requests
 
 
+# Sending message via bot
 def write_message(send_id: int, message: str, keyboard=None, attachment=None) -> None:
     data = {'peer_id': send_id, 'message': message, 'random_id': get_random_id()}
     if keyboard is not None:
@@ -58,8 +59,26 @@ def get_keyboard(callback_characters, callback_about):
     return keyboard
 
 
+# Getting menu keyboard
+def get_menu_keyboard():
+    keyboard = VkKeyboard(one_time=True)
+    buttons = ["Выбрать произведение", "Контакты", "Назад"]
+    color = VkKeyboardColor.POSITIVE
+    for i, button in enumerate(buttons):
+        match i:
+            case 1:
+                color = VkKeyboardColor.PRIMARY
+
+            case 2:
+                color = VkKeyboardColor.NEGATIVE
+        keyboard.add_button(button, color)
+        if i < len(buttons) - 1:
+            keyboard.add_line()
+    return keyboard
+
+
 # Main circle
-def run_api() -> None:
+def check_events() -> None:
     for event in long_poll.listen():
         # Answering on message from user
         if event.type == VkBotEventType.MESSAGE_NEW:
@@ -67,12 +86,7 @@ def run_api() -> None:
                 write_message(event.object.message['peer_id'], "Hello! Welcome to our group!")
             elif "Меню".lower() in event.object.message['text'].lower():
                 if check_member(event.object.message['from_id']):
-                    keyboard = VkKeyboard(one_time=True)
-                    buttons = ["Выбрать произведение", "Назад"]
-                    for i, button in enumerate(buttons):
-                        keyboard.add_button(button, VkKeyboardColor.POSITIVE)
-                        if i < len(buttons) - 1:
-                            keyboard.add_line()
+                    keyboard = get_menu_keyboard()
                     write_message(event.object.message['peer_id'],
                                   "Спасибо, за подписку!\nВыберите, что вы хотите сделать", keyboard)
                 else:
@@ -94,10 +108,6 @@ def run_api() -> None:
                         if i < len(buttons) - 1:
                             keyboard.add_line()
                     write_message(event.object.message['peer_id'], "Какое произведение вас интересует?", keyboard)
-                elif event.object.message['text'].lower() == "Краткое содержание".lower():
-                    pass
-                elif event.object.message['text'].lower() == "Описание персонажей".lower():
-                    pass
                 else:
                     write_message(event.object.message['peer_id'],
                                   f"Для использования всех функций подпишитесь на группу!\n{group_url}")
@@ -109,6 +119,12 @@ def run_api() -> None:
                 keyboard = VkKeyboard()
                 keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
                 write_message(event.object.message['peer_id'], "До новых встреч!", keyboard)
+            elif event.object.message['text'].lower() == 'Контакты'.lower():
+                keyboard = VkKeyboard()
+                keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+                write_message(event.object.message['peer_id'],
+                              'Kristina Taylor\nVK: https://vk.com/kristin37\nTelegram: https://t.me/KristinT37',
+                              keyboard)
             else:
                 write_message(event.object.message['peer_id'], "Sorry I don't understand. Write start.")
 
