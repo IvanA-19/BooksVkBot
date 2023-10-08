@@ -77,6 +77,13 @@ def get_menu_keyboard():
     return keyboard
 
 
+# Getting keyboard for open menu
+def get_open_menu_keyboard():
+    keyboard = VkKeyboard()
+    keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+    return keyboard
+
+
 # Main circle
 def check_events() -> None:
     for event in long_poll.listen():
@@ -112,16 +119,13 @@ def check_events() -> None:
                     write_message(event.object.message['peer_id'],
                                   f"Для использования всех функций подпишитесь на группу!\n{group_url}")
             elif event.object.message['text'].lower() == 'Start'.lower():
-                keyboard = VkKeyboard()
-                keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+                keyboard = get_open_menu_keyboard()
                 write_message(event.object.message['peer_id'], "Рад приветствовать!", keyboard)
             elif event.object.message['text'].lower() == 'Назад'.lower():
-                keyboard = VkKeyboard()
-                keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+                keyboard = get_open_menu_keyboard()
                 write_message(event.object.message['peer_id'], "До новых встреч!", keyboard)
             elif event.object.message['text'].lower() == 'Контакты'.lower():
-                keyboard = VkKeyboard()
-                keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+                keyboard = get_open_menu_keyboard()
                 write_message(event.object.message['peer_id'],
                               'Kristina Taylor\nVK: https://vk.com/kristin37\nTelegram: https://t.me/KristinT37',
                               keyboard)
@@ -133,8 +137,7 @@ def check_events() -> None:
             if event.object.payload.get('type') == 'my_own_100500_type_edit':
                 path = 'novels'
                 if event.object.payload.get('text') == 'Меню':
-                    keyboard = VkKeyboard()
-                    keyboard.add_button("Меню", VkKeyboardColor.POSITIVE)
+                    keyboard = get_open_menu_keyboard()
                     write_message(event.object.peer_id, 'Меню открыто', keyboard)
                 elif event.object.payload.get('text') == 'Страница 2':
                     # If elements count will be > 10 then need do [5:10], next [10:15] and next, next, next
