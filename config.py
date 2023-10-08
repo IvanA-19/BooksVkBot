@@ -3,9 +3,9 @@ import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll
 
 # Api data
-api_token = 'your api token'
-group_id = 'your group id'
-group_url = 'your group url'
+api_token = 'Your api token'
+group_id = 'Your group id'
+group_url = 'Your group url'
 
 novels = ["Наше счастливое вчера", "Тени грешного города", "Черный человек",
                           "Из мажоров в люди", "Какой же выбор сделать",
