@@ -85,7 +85,7 @@ def get_open_menu_keyboard():
 
 
 # Main circle
-def check_events() -> None:
+def run_api() -> None:
     for event in long_poll.listen():
         # Answering on message from user
         if event.type == VkBotEventType.MESSAGE_NEW:
@@ -135,7 +135,7 @@ def check_events() -> None:
         # Processing clicks on callback buttons
         elif event.type == VkBotEventType.MESSAGE_EVENT:
             if event.object.payload.get('type') == 'my_own_100500_type_edit':
-                path = 'novels'
+                path = 'data/novels'
                 if event.object.payload.get('text') == 'Меню':
                     keyboard = get_open_menu_keyboard()
                     write_message(event.object.peer_id, 'Меню открыто', keyboard)
