@@ -55,7 +55,7 @@ def get_keyboard(callback_characters, callback_about):
     keyboard.add_callback_button(
         label='Меню',
         color=VkKeyboardColor.NEGATIVE,
-        payload={'type': 'my_own_100500_type_edit', f'text': f'{'Меню'}'})
+        payload={'type': 'my_own_100500_type_edit', f'text': f"{'Меню'}"})
     return keyboard
 
 
@@ -65,12 +65,11 @@ def get_menu_keyboard():
     buttons = ["Выбрать произведение", "Контакты", "Назад"]
     color = VkKeyboardColor.POSITIVE
     for i, button in enumerate(buttons):
-        match i:
-            case 1:
-                color = VkKeyboardColor.PRIMARY
+        if i == 1:
+            color = VkKeyboardColor.PRIMARY
 
-            case 2:
-                color = VkKeyboardColor.NEGATIVE
+        elif i == 2:
+            color = VkKeyboardColor.NEGATIVE
         keyboard.add_button(button, color)
         if i < len(buttons) - 1:
             keyboard.add_line()
@@ -215,46 +214,45 @@ def run_api() -> None:
                     write_message(event.object.peer_id, 'В разработке...', None)
 
                 else:
-                    attachment = get_sending_file(event, f'{event.object.payload.get('text')}.docx', path)
+                    attachment = get_sending_file(event, f"{event.object.payload.get('text')}.docx", path)
                     text = 'Немного терпения, пожалуйста.\nУже отправляю!&#128522;'
-                    match event.object.payload.get('text'):
-                        case 'Наше счастливое вчера':
-                            edit_message(event, text)
-                            keyboard = get_keyboard('Персонажи НСВ', 'О НСВ')
-                            write_message(event.object.peer_id, 'Отличный детективный роман!', keyboard,
+                    if event.object.payload.get('text') == 'Наше счастливое вчера':
+                        edit_message(event, text)
+                        keyboard = get_keyboard('Персонажи НСВ', 'О НСВ')
+                        write_message(event.object.peer_id, 'Отличный детективный роман!', keyboard,
                                           attachment)
-                        case 'Тени грешного города':
-                            edit_message(event, text)
-                            keyboard = get_keyboard('Персонажи ТГГ', 'О ТГГ')
-                            write_message(event.object.peer_id,
+                    elif event.object.payload.get('text') ==  'Тени грешного города':
+                        edit_message(event, text)
+                        keyboard = get_keyboard('Персонажи ТГГ', 'О ТГГ')
+                        write_message(event.object.peer_id,
                                           'Начало истории необычной компании демонов. Приятного прочтения!',
                                           keyboard,
                                           attachment)
-                        case 'Черный человек':
-                            edit_message(event, text)
-                            keyboard = get_keyboard('Персонажи ЧЧ', 'О ЧЧ')
-                            write_message(event.object.peer_id,
+                    elif event.object.payload.get('text') ==  'Черный человек':
+                        edit_message(event, text)
+                        keyboard = get_keyboard('Персонажи ЧЧ', 'О ЧЧ')
+                        write_message(event.object.peer_id,
                                           'Пора узнать секреты прошлого темного мастера и его свиты.',
                                           keyboard,
                                           attachment)
-                        case 'Из мажоров в люди':
-                            edit_message(event, text)
-                            keyboard = get_keyboard('Персонажи ИМВЛ', 'О ИМВЛ')
-                            write_message(event.object.peer_id,
+                    elif event.object.payload.get('text') ==  'Из мажоров в люди':
+                        edit_message(event, text)
+                        keyboard = get_keyboard('Персонажи ИМВЛ', 'О ИМВЛ')
+                        write_message(event.object.peer_id,
                                           'Первая часть увлекательной истории семьи Алехиных. Классика!',
                                           keyboard,
                                           attachment)
-                        case 'Какой же выбор сделать':
-                            edit_message(event, text)
-                            keyboard = get_keyboard('Персонажи КВС', 'О КВС')
-                            write_message(event.object.peer_id,
+                    elif event.object.payload.get('text') ==  'Какой же выбор сделать':
+                        edit_message(event, text)
+                        keyboard = get_keyboard('Персонажи КВС', 'О КВС')
+                        write_message(event.object.peer_id,
                                           'А вот и продолжение истории о семье Алехиных!',
                                           keyboard,
                                           attachment)
-                        case 'Повести о пространстве и времени':
-                            keyboard = get_keyboard('Персонажи ПОПИВ', 'О ПОПИВ')
-                            edit_message(event, text)
-                            write_message(event.object.peer_id,
+                    elif event.object.payload.get('text') ==  'Повести о пространстве и времени':
+                        keyboard = get_keyboard('Персонажи ПОПИВ', 'О ПОПИВ')
+                        edit_message(event, text)
+                        write_message(event.object.peer_id,
                                           'Интересное произведение о путешествиях во времени и не только!',
                                           keyboard,
                                           attachment)
