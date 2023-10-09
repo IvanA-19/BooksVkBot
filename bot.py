@@ -198,7 +198,9 @@ def run_api() -> None:
                 # Information about novels will be located in /description
                 # Information about characters will be located in /characters
                 elif event.object.payload.get('text') == 'Персонажи НСВ':
-                    write_message(event.object.peer_id, 'В разработке...', None)
+                    attachment = get_sending_file(event, 'Персонажи НСВ.docx', 'data/characters')
+                    write_message(event.object.peer_id, 'Вот полный список персонажей',
+                                  None, attachment)
                 elif event.object.payload.get('text') == 'О НСВ':
                     write_message(event.object.peer_id, 'В разработке...', None)
 
