@@ -214,7 +214,7 @@ def check_events() -> None:
                     write_message(event.object.peer_id, 'В разработке...', None)
 
                 else:
-                    attachment = get_sending_file(event, f'{event.object.payload.get('text')}.docx', path)
+                    attachment = get_sending_file(event, f"{event.object.payload.get('text')}.docx", path)
                     text = 'Немного терпения, пожалуйста.\nУже отправляю!&#128522;'
                     if event.object.payload.get('text') == 'Наше счастливое вчера':
                         edit_message(event, text)
