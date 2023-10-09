@@ -62,15 +62,16 @@ def get_keyboard(callback_characters, callback_about):
 # Getting menu keyboard
 def get_menu_keyboard():
     keyboard = VkKeyboard(one_time=True)
-    buttons = ["Выбрать произведение", "Контакты", "Назад"]
-    color = VkKeyboardColor.POSITIVE
+    buttons = ["Выбрать произведение", "Контакты", "Использование", "Назад"]
+    color = VkKeyboardColor.PRIMARY
     for i, button in enumerate(buttons):
         match i:
-            case 1:
+            case 0:
                 color = VkKeyboardColor.PRIMARY
-
-            case 2:
+            case 3:
                 color = VkKeyboardColor.NEGATIVE
+            case _:
+                color = VkKeyboardColor.POSITIVE
         keyboard.add_button(button, color)
         if i < len(buttons) - 1:
             keyboard.add_line()
@@ -90,6 +91,8 @@ def run_api() -> None:
         # Answering on message from user
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.object.message['text'].lower() == 'Hello'.lower():
+                keyboard = VkKeyboard()
+                keyboard.add_button('Start', VkKeyboardColor.PRIMARY)
                 write_message(event.object.message['peer_id'], "Hello! Welcome to our group!")
             elif "Меню".lower() in event.object.message['text'].lower():
                 if check_member(event.object.message['from_id']):
@@ -99,6 +102,9 @@ def run_api() -> None:
                 else:
                     write_message(event.object.message['peer_id'],
                                   f"Для использования всех функций подпишитесь на группу!\n{group_url}")
+            elif event.object.message['text'] == 'Menu':
+                keyboard = get_open_menu_keyboard()
+                write_message(event.object.message['peer_id'], 'Открываю', keyboard)
             elif event.object.message['text'].lower() == "Выбрать произведение".lower():
                 if check_member(event.object.message['from_id']):
                     keyboard = VkKeyboard(inline=True)
@@ -129,10 +135,15 @@ def run_api() -> None:
                 write_message(event.object.message['peer_id'],
                               'Kristina Taylor\nVK: https://vk.com/kristin37\nTelegram: https://t.me/KristinT37',
                               keyboard)
+            elif event.object.message['text'].lower() == 'Использование'.lower():
+                text = ('Start - начало использования\nMenu - открыть кнопку меню\n'
+                        'Если написано произвольное сообщение - кнопка Start будет добавлена автоматически\n')
+                keyboard = get_menu_keyboard()
+                write_message(event.object.message['peer_id'], text, keyboard)
             else:
-              keyboard = VkKeyboard()
-              keyboard.add_button("Start", VkKeyboardColor.PRIMARY)
-              write_message(event.object.message['peer_id'], "Sorry I don't understand. Press start.", keyboard)
+                keyboard = VkKeyboard()
+                keyboard.add_button("Start", VkKeyboardColor.PRIMARY)
+                write_message(event.object.message['peer_id'], "Sorry I don't understand. Press start.", keyboard)
 
         # Processing clicks on callback buttons
         elif event.type == VkBotEventType.MESSAGE_EVENT:
@@ -160,7 +171,7 @@ def run_api() -> None:
                         if i < len(buttons) - 1:
                             keyboard.add_line()
                     edit_message(event, 'Секунду, загружаю страницу 2')
-                    write_message(event.object.peer_id,"Какое произведение вас интересует?", keyboard)
+                    write_message(event.object.peer_id, "Какое произведение вас интересует?", keyboard)
                 elif event.object.payload.get('text') == 'Страница 3':
                     write_message(event.object.peer_id, 'Еще больше романов будет доступно совсем скоро!')
                 elif event.object.payload.get('text') == 'На страницу 1':
@@ -179,7 +190,7 @@ def run_api() -> None:
                         if i < len(buttons) - 1:
                             keyboard.add_line()
                     edit_message(event, 'Секунду, загружаю страницу 1')
-                    write_message(event.object.peer_id,"Какое произведение вас интересует?", keyboard)
+                    write_message(event.object.peer_id, "Какое произведение вас интересует?", keyboard)
 
                 # In next block(lines 164 - 193) in future will be used functions get_sending_file and write_message
                 # Information about characters of novels and about novels will be collected in docx files
