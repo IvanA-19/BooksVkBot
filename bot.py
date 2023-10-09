@@ -55,7 +55,7 @@ def get_keyboard(callback_characters, callback_about):
     keyboard.add_callback_button(
         label='Меню',
         color=VkKeyboardColor.NEGATIVE,
-        payload={'type': 'my_own_100500_type_edit', f'text': f'{'Меню'}'})
+        payload={'type': 'my_own_100500_type_edit', f'text': f"{'Меню'}"})
     return keyboard
 
 
